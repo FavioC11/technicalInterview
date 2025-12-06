@@ -2,7 +2,7 @@ export enum QuestionLevel {
   JUNIOR = 'JUNIOR',
   SEMI_SENIOR = 'SEMI SENIOR',
   SENIOR = 'SENIOR',
-  EXPERT = 'EXPERT'
+  EXPERT = 'EXPERT',
 }
 
 export interface EvaluationCriteria {

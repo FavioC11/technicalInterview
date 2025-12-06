@@ -5,6 +5,6 @@ import { Assessment } from './features/assessment/assessment';
   selector: 'app-root',
   imports: [Assessment],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {}

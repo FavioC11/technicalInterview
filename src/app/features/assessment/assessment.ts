@@ -21,9 +21,7 @@ export class Assessment {
 
   sections = this.assessmentService.getSections();
 
-  activeSection = computed(() =>
-    this.assessmentService.getSectionById(this.activeSectionId())
-  );
+  activeSection = computed(() => this.assessmentService.getSectionById(this.activeSectionId()));
 
   progressPercentage = this.assessmentService.progressPercentage;
   answeredCount = this.assessmentService.answeredQuestions;

@@ -24,7 +24,7 @@ export class Question {
   }
 
   toggleCriteria() {
-    this.showCriteria.update(value => !value);
+    this.showCriteria.update((value) => !value);
   }
 
   onAnswerInput(event: Event) {
@@ -32,17 +32,17 @@ export class Question {
     this.localAnswer.set(target.value);
     this.answerChange.emit({
       questionId: this.question().id,
-      answer: target.value
+      answer: target.value,
     });
   }
 
   getLevelClass(): string {
     const level = this.question().level;
     const classMap: Record<string, string> = {
-      'JUNIOR': 'level-junior',
+      JUNIOR: 'level-junior',
       'SEMI SENIOR': 'level-semi-senior',
-      'SENIOR': 'level-senior',
-      'EXPERT': 'level-expert'
+      SENIOR: 'level-senior',
+      EXPERT: 'level-expert',
     };
     return classMap[level] || 'level-junior';
   }

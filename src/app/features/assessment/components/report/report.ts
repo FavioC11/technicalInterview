@@ -36,7 +36,9 @@ export class Report {
   }
 
   onResetTest() {
-    if (confirm('¿Estás seguro de que quieres reiniciar la prueba? Se perderán todas tus respuestas.')) {
+    if (
+      confirm('¿Estás seguro de que quieres reiniciar la prueba? Se perderán todas tus respuestas.')
+    ) {
       this.resetTest.emit();
     }
   }

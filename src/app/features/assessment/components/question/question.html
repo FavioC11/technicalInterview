@@ -6,7 +6,7 @@
   <p class="description">{{ question().description }}</p>
 
   @if (question().codeExample) {
-    <pre class="code-block"><code>{{ question().codeExample }}</code></pre>
+  <pre class="code-block"><code>{{ question().codeExample }}</code></pre>
   }
 
   <textarea
@@ -22,16 +22,16 @@
   </button>
 
   @if (showCriteria()) {
-    <div class="answer-criteria">
-      <h5>✅ Criterios de Evaluación ({{ question().points }} pts):</h5>
-      <ul>
-        @for (criterion of question().criteria; track criterion.description) {
-          <li>
-            <strong>({{ criterion.points }} pt{{ criterion.points !== 1 ? 's' : '' }})</strong>
-            {{ criterion.description }}
-          </li>
-        }
-      </ul>
-    </div>
+  <div class="answer-criteria">
+    <h5>✅ Criterios de Evaluación ({{ question().points }} pts):</h5>
+    <ul>
+      @for (criterion of question().criteria; track criterion.description) {
+      <li>
+        <strong>({{ criterion.points }} pt{{ criterion.points !== 1 ? 's' : '' }})</strong>
+        {{ criterion.description }}
+      </li>
+      }
+    </ul>
+  </div>
   }
 </div>

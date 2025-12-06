@@ -6,6 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './info-box.html',
   styleUrl: './info-box.scss',
 })
-export class InfoBox {
-
-}
+export class InfoBox {}

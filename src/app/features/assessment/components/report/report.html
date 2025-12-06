@@ -26,7 +26,9 @@
       <div class="label">Preguntas Pendientes</div>
     </div>
     <div class="stat-card">
-      <div class="value">{{ Math.round((report().answeredCount / report().totalQuestions) * 100) }}%</div>
+      <div class="value">
+        {{ Math.round((report().answeredCount / report().totalQuestions) * 100) }}%
+      </div>
       <div class="label">Completado</div>
     </div>
     <div class="stat-card">
@@ -39,14 +41,17 @@
     <h4>💡 Recomendaciones</h4>
     <ul>
       @for (rec of report().recommendations; track rec) {
-        <li>{{ rec }}</li>
+      <li>{{ rec }}</li>
       }
     </ul>
   </div>
 
   <div class="alert alert-success">
     <h4>📋 Reporte Generado</h4>
-    <p>Copia el siguiente reporte y compártelo con Claude para obtener un análisis detallado de tu nivel.</p>
+    <p>
+      Copia el siguiente reporte y compártelo con Claude para obtener un análisis detallado de tu
+      nivel.
+    </p>
   </div>
 
   <div class="report-text">{{ reportText() }}</div>
@@ -55,8 +60,6 @@
     <button class="copy-report-btn" (click)="copyReport()">
       {{ copySuccess() ? '✅ Copiado!' : '📋 Copiar Reporte' }}
     </button>
-    <button class="reset-btn" (click)="onResetTest()">
-      🔄 Reiniciar Prueba
-    </button>
+    <button class="reset-btn" (click)="onResetTest()">🔄 Reiniciar Prueba</button>
   </div>
 </div>

@@ -1,11 +1,11 @@
 <div class="tabs">
   @for (section of sections(); track section.id) {
-    <button
-      class="tab"
-      [class.active]="activeSection() === section.id"
-      (click)="onTabClick(section.id)"
-    >
-      {{ section.name }} ({{ section.totalPoints }} pts)
-    </button>
+  <button
+    class="tab"
+    [class.active]="activeSection() === section.id"
+    (click)="onTabClick(section.id)"
+  >
+    {{ section.name }} ({{ section.totalPoints }} pts)
+  </button>
   }
 </div>
