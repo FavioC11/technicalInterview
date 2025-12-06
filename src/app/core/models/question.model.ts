@@ -39,10 +39,18 @@ export interface Section {
 export interface AssessmentReport {
   candidateName: string;
   date: Date;
+  technologyId: string;
+  technologyName: string;
   answeredCount: number;
   totalQuestions: number;
   estimatedScore: number;
   level: string;
   answers: Answer[];
   recommendations: string[];
+}
+
+export interface AssessmentData {
+  technologyId: string;
+  technologyName: string;
+  sections: Section[];
 }

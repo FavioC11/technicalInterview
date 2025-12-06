@@ -1,10 +1,36 @@
 <div class="container">
   <app-header />
 
+  <div class="technology-banner">
+    <div class="tech-info">
+      <span class="tech-icon">{{ selectedTechnology()?.icon }}</span>
+      <div class="tech-details">
+        <span class="tech-label">Evaluando:</span>
+        <span class="tech-name">{{ selectedTechnology()?.name }}</span>
+      </div>
+    </div>
+    <button class="change-tech-btn" (click)="toggleTechnologySelector()">
+      🔄 Cambiar Tecnología
+    </button>
+  </div>
+
+  @if (showTechnologySelector()) {
+    <div class="technology-selector-modal">
+      <div class="modal-overlay" (click)="toggleTechnologySelector()"></div>
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Seleccionar Tecnología</h2>
+          <button class="close-btn" (click)="toggleTechnologySelector()">✕</button>
+        </div>
+        <app-technology-selector (click)="onTechnologyChange()" />
+      </div>
+    </div>
+  }
+
   <app-info-box />
 
   <app-tabs
-    [sections]="sections"
+    [sections]="sections()"
     [activeSection]="activeSectionId()"
     (sectionChange)="onSectionChange($event)"
   />
