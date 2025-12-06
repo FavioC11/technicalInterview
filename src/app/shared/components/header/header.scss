@@ -1,30 +1,101 @@
+/* ============================================
+   HEADER COMPONENT
+   Design: Clean, motivational, high visual hierarchy
+   ============================================ */
 .header {
-  background: linear-gradient(135deg, #dd0031 0%, #c3002f 100%);
-  color: white;
-  padding: 40px;
+  // Calm, professional gradient (blue learning palette)
+  background: linear-gradient(135deg, var(--color-accent-primary) 0%, #3b5bdb 100%);
+  color: var(--color-text-inverted);
+
+  // Generous padding for breathing room (Cognitive Load Theory)
+  padding: var(--spacing-2xl) var(--spacing-xl);
   text-align: center;
 
+  // Subtle shadow for depth
+  box-shadow: 0 4px 12px rgba(79, 107, 237, 0.15);
+
   h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    // Large, clear hierarchy
+    font-size: 2.75rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+
+    // Softer shadow for readability
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    // Better letter spacing for clarity
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+
+    // Smooth entrance animation
+    animation: slideInDown 0.6s ease-out;
   }
 
   p {
     margin: 0;
-    font-size: 1.1em;
+    font-size: 1.125rem;
+    font-weight: 400;
     opacity: 0.95;
+    color: rgba(255, 255, 255, 0.92);
+
+    // Better line height for readability
+    line-height: 1.6;
+
+    // Max width for optimal reading length
+    max-width: 600px;
+    margin: 0 auto;
+
+    // Delayed animation for progressive disclosure
+    animation: fadeInUp 0.8s ease-out 0.2s both;
   }
 
   @media (max-width: 768px) {
-    padding: 20px;
+    padding: var(--spacing-xl) var(--spacing-lg);
 
     h1 {
-      font-size: 1.8em;
+      font-size: 2rem;
+      margin-bottom: var(--spacing-sm);
     }
 
     p {
-      font-size: 0.95em;
+      font-size: 1rem;
     }
+  }
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-lg) var(--spacing-md);
+
+    h1 {
+      font-size: 1.75rem;
+    }
+
+    p {
+      font-size: 0.9375rem;
+    }
+  }
+}
+
+/* ============================================
+   MOTIVATIONAL ANIMATIONS
+   ============================================ */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

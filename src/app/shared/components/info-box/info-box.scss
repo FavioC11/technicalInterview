@@ -1,22 +1,67 @@
+/* ============================================
+   INFO BOX COMPONENT
+   Design: Clear, helpful, non-intrusive
+   ============================================ */
 .info-box {
-  background: #f8f9fa;
-  border-left: 4px solid #dd0031;
-  padding: 20px;
-  margin: 20px;
-  border-radius: 4px;
+  // Soft blue background (information color)
+  background: linear-gradient(135deg, var(--color-info-light) 0%, #dbeafe 100%);
+
+  // Left accent border
+  border-left: 4px solid var(--color-info);
+
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg);
+  border-radius: var(--radius-md);
+
+  // Subtle shadow for depth
+  box-shadow: var(--shadow-sm);
 
   h3 {
     margin-top: 0;
-    margin-bottom: 15px;
-    color: #333;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-primary);
+    font-size: 1.125rem;
+    font-weight: 600;
+
+    // Add info icon
+    &::before {
+      content: 'ℹ️ ';
+      margin-right: var(--spacing-xs);
+    }
   }
 
   p {
-    margin: 8px 0;
-    line-height: 1.6;
+    margin: var(--spacing-sm) 0;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
 
     strong {
-      color: #dd0031;
+      color: var(--color-info);
+      font-weight: 600;
+    }
+  }
+
+  // Last paragraph no margin
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+  .info-box {
+    padding: var(--spacing-md);
+    margin: var(--spacing-md);
+
+    h3 {
+      font-size: 1rem;
+    }
+
+    p {
+      font-size: 0.875rem;
     }
   }
 }

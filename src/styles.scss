@@ -1,21 +1,132 @@
-/* Global styles */
+/* ============================================
+   EDUCATIONAL PLATFORM DESIGN SYSTEM
+   Based on Cognitive Psychology & Behavioral Design
+   ============================================ */
+
+// Import modern, friendly font from Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ============================================
+   COLOR PALETTE - Cognitive Psychology Applied
+   ============================================ */
+:root {
+  // Primary Background Colors (Calm & Clean)
+  --color-bg-primary: #f5f7fa;        // Soft grayish-blue (reduces eye strain)
+  --color-bg-secondary: #ffffff;      // Pure white for content areas
+  --color-bg-tertiary: #fafbfc;       // Subtle off-white
+
+  // Accent Colors (Energizing but focused)
+  --color-accent-primary: #4f6bed;    // Deep calm blue (trust, focus, stability)
+  --color-accent-secondary: #10b981;  // Learning green (growth, progress)
+  --color-accent-tertiary: #f59e0b;   // Warm amber (motivation, energy)
+
+  // Text Colors (Clear hierarchy)
+  --color-text-primary: #1f2937;      // Dark slate (high contrast, readability)
+  --color-text-secondary: #6b7280;    // Medium gray (supporting text)
+  --color-text-tertiary: #9ca3af;     // Light gray (subtle text)
+  --color-text-inverted: #ffffff;     // White text on dark backgrounds
+
+  // Semantic Colors (Feedback & motivation)
+  --color-success: #10b981;           // Achievement green
+  --color-success-light: #d1fae5;     // Light success background
+  --color-warning: #f59e0b;           // Attention amber
+  --color-warning-light: #fef3c7;     // Light warning background
+  --color-info: #3b82f6;              // Information blue
+  --color-info-light: #dbeafe;        // Light info background
+  --color-error: #ef4444;             // Error red (minimal use)
+
+  // Progress & Gamification Colors
+  --color-progress-junior: #10b981;
+  --color-progress-semi: #f59e0b;
+  --color-progress-senior: #f97316;
+  --color-progress-expert: #8b5cf6;
+
+  // Spacing System (Generous white space)
+  --spacing-xs: 0.5rem;    // 8px
+  --spacing-sm: 1rem;      // 16px
+  --spacing-md: 1.5rem;    // 24px
+  --spacing-lg: 2rem;      // 32px
+  --spacing-xl: 3rem;      // 48px
+  --spacing-2xl: 4rem;     // 64px
+
+  // Border Radius (Soft, friendly)
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  // Shadows (Depth & elevation)
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  // Transitions (Smooth, delightful)
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+}
+
+/* ============================================
+   GLOBAL RESET & BASE STYLES
+   ============================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  color: #333;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
-  min-height: 100vh;
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  // Modern, friendly typography
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+
+  // Calm, clean background with subtle gradient
+  background: linear-gradient(135deg, #e0e7ff 0%, #f5f7fa 50%, #e0f2fe 100%);
+  background-attachment: fixed;
+
+  padding: var(--spacing-lg);
+  min-height: 100vh;
+
+  // Better text rendering
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
 @media (max-width: 768px) {
-  body {
-    padding: 10px;
+  html {
+    font-size: 14px;
   }
+
+  body {
+    padding: var(--spacing-sm);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY & FOCUS STATES
+   ============================================ */
+*:focus-visible {
+  outline: 3px solid var(--color-accent-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================
+   SELECTION STYLES
+   ============================================ */
+::selection {
+  background-color: rgba(79, 107, 237, 0.2);
+  color: var(--color-text-primary);
 }
