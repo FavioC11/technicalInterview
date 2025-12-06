@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { Technology } from '../../../core/models/technology.model';
 
 @Component({
   selector: 'app-header',
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
-export class Header {}
+export class Header {
+  technology = input<Technology | null>(null);
+}
