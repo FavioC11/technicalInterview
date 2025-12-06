@@ -1,0 +1,22 @@
+.info-box {
+  background: #f8f9fa;
+  border-left: 4px solid #DD0031;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 4px;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  p {
+    margin: 8px 0;
+    line-height: 1.6;
+
+    strong {
+      color: #DD0031;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<div class="progress-section">
+  <h3>Progreso de Respuestas</h3>
+  <div class="progress-bar">
+    <div class="progress-fill" [style.width.%]="percentage()">
+      {{ percentage() }}%
+    </div>
+  </div>
+  <p class="progress-text">
+    Has respondido {{ answeredCount() }} de {{ totalQuestions() }} preguntas
+  </p>
+</div>

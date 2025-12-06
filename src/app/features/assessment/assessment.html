@@ -1,0 +1,50 @@
+<div class="container">
+  <app-header />
+
+  <app-info-box />
+
+  <app-tabs
+    [sections]="sections"
+    [activeSection]="activeSectionId()"
+    (sectionChange)="onSectionChange($event)"
+  />
+
+  <div class="content">
+    @if (activeSection(); as section) {
+      <div class="section-header">
+        <h2>{{ section.name }}</h2>
+        <div class="timer">
+          <strong>⏱️ Tiempo estimado:</strong> {{ section.estimatedTime }} |
+          <strong>Puntuación:</strong> {{ section.totalPoints }} puntos
+        </div>
+      </div>
+
+      @for (question of section.questions; track question.id) {
+        <app-question
+          [question]="question"
+          [answer]="getAnswer(question.id)"
+          [isAnswered]="isQuestionAnswered(question.id)"
+          (answerChange)="onAnswerChange($event)"
+        />
+      }
+    }
+
+    <div class="submit-section">
+      <h3>🎯 ¿Terminaste todas las preguntas?</h3>
+      <p>Haz clic en el botón para generar tu reporte de evaluación completo</p>
+      <button class="submit-btn" (click)="generateReport()">
+        📊 Generar Reporte Completo
+      </button>
+    </div>
+
+    @if (showReport()) {
+      <div id="reportContainer">
+        <app-report
+          [report]="getReport()"
+          [reportText]="getReportText()"
+          (resetTest)="resetTest()"
+        />
+      </div>
+    }
+  </div>
+</div>

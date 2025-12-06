@@ -1,0 +1,37 @@
+<div class="question" [class.answered]="isAnswered()">
+  <span class="level-badge" [ngClass]="getLevelClass()">{{ question().level }}</span>
+  <span class="question-number">Q{{ question().id }}</span>
+  <h4>{{ question().title }}</h4>
+
+  <p class="description">{{ question().description }}</p>
+
+  @if (question().codeExample) {
+    <pre class="code-block"><code>{{ question().codeExample }}</code></pre>
+  }
+
+  <textarea
+    class="answer-input"
+    [value]="localAnswer()"
+    (input)="onAnswerInput($event)"
+    placeholder="Escribe tu respuesta aquí..."
+    [rows]="question().codeExample ? 10 : 5"
+  ></textarea>
+
+  <button class="toggle-answer-btn" (click)="toggleCriteria()">
+    👁️ {{ showCriteria() ? 'Ocultar' : 'Ver' }} Criterios de Evaluación
+  </button>
+
+  @if (showCriteria()) {
+    <div class="answer-criteria">
+      <h5>✅ Criterios de Evaluación ({{ question().points }} pts):</h5>
+      <ul>
+        @for (criterion of question().criteria; track criterion.description) {
+          <li>
+            <strong>({{ criterion.points }} pt{{ criterion.points !== 1 ? 's' : '' }})</strong>
+            {{ criterion.description }}
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</div>

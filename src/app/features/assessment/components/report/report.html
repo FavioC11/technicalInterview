@@ -1,0 +1,62 @@
+<div class="report-container">
+  <h2>📊 Reporte de Evaluación Angular</h2>
+
+  <app-progress-bar
+    [percentage]="Math.round((report().answeredCount / report().totalQuestions) * 100)"
+    [answeredCount]="report().answeredCount"
+    [totalQuestions]="report().totalQuestions"
+  />
+
+  <div class="score-circle" [ngClass]="getLevelClass()">
+    <div>
+      <span class="score-value">{{ report().estimatedScore }}</span>
+      <div class="score-label">/ 100 pts</div>
+    </div>
+  </div>
+
+  <h3 class="level-title">Nivel Estimado: {{ report().level }}</h3>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="value">{{ report().answeredCount }}</div>
+      <div class="label">Preguntas Respondidas</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">{{ report().totalQuestions - report().answeredCount }}</div>
+      <div class="label">Preguntas Pendientes</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">{{ Math.round((report().answeredCount / report().totalQuestions) * 100) }}%</div>
+      <div class="label">Completado</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">{{ report().estimatedScore }}</div>
+      <div class="label">Puntuación Estimada</div>
+    </div>
+  </div>
+
+  <div class="recommendation">
+    <h4>💡 Recomendaciones</h4>
+    <ul>
+      @for (rec of report().recommendations; track rec) {
+        <li>{{ rec }}</li>
+      }
+    </ul>
+  </div>
+
+  <div class="alert alert-success">
+    <h4>📋 Reporte Generado</h4>
+    <p>Copia el siguiente reporte y compártelo con Claude para obtener un análisis detallado de tu nivel.</p>
+  </div>
+
+  <div class="report-text">{{ reportText() }}</div>
+
+  <div class="button-container">
+    <button class="copy-report-btn" (click)="copyReport()">
+      {{ copySuccess() ? '✅ Copiado!' : '📋 Copiar Reporte' }}
+    </button>
+    <button class="reset-btn" (click)="onResetTest()">
+      🔄 Reiniciar Prueba
+    </button>
+  </div>
+</div>
