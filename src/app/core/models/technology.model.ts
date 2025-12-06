@@ -6,6 +6,7 @@ export enum TechnologyCategory {
   CLOUD = 'Cloud',
   MOBILE = 'Mobile',
   DEVOPS = 'DevOps',
+  DOTNET = 'Dotnet',
 }
 
 export interface Technology {

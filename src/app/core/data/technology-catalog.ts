@@ -41,6 +41,15 @@ export const TECHNOLOGIES: Technology[] = [
     color: '#3776AB',
     levels: ['Junior', 'Semi Senior', 'Senior', 'Expert'],
   },
+  {
+    id: 'dotnet',
+    name: '.NET',
+    category: TechnologyCategory.BACKEND,
+    description: 'Plataforma de desarrollo de Microsoft',
+    icon: '🔷',
+    color: '#512BD4',
+    levels: ['Junior', 'Semi Senior', 'Senior', 'Expert'],
+  },
 
   // Big Data Technologies
   {
