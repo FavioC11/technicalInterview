@@ -6,20 +6,23 @@ import { InfoBox } from '../../shared/components/info-box/info-box';
 import { Tabs } from './components/tabs/tabs';
 import { Question } from './components/question/question';
 import { Report } from './components/report/report';
+import { TechnologySelectorComponent } from '../../shared/components/technology-selector/technology-selector';
 
 @Component({
   selector: 'app-assessment',
-  imports: [CommonModule, Header, InfoBox, Tabs, Question, Report],
+  imports: [CommonModule, Header, InfoBox, Tabs, Question, Report, TechnologySelectorComponent],
   templateUrl: './assessment.html',
   styleUrl: './assessment.scss',
 })
 export class Assessment {
   private assessmentService = inject(AssessmentService);
 
+  showTechnologySelector = signal(false);
   activeSectionId = signal('nivel1');
   showReport = signal(false);
 
-  sections = this.assessmentService.getSections();
+  sections = computed(() => this.assessmentService.getSections());
+  selectedTechnology = computed(() => this.assessmentService.getSelectedTechnology());
 
   activeSection = computed(() => this.assessmentService.getSectionById(this.activeSectionId()));
 
@@ -74,7 +77,25 @@ export class Assessment {
   resetTest() {
     this.assessmentService.clearAllAnswers();
     this.showReport.set(false);
-    this.activeSectionId.set('nivel1');
+    this.initializeActiveSectionId();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  toggleTechnologySelector() {
+    this.showTechnologySelector.update(v => !v);
+  }
+
+  onTechnologyChange() {
+    this.showTechnologySelector.set(false);
+    this.showReport.set(false);
+    this.initializeActiveSectionId();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  private initializeActiveSectionId() {
+    const sections = this.assessmentService.getSections();
+    if (sections.length > 0) {
+      this.activeSectionId.set(sections[0].id);
+    }
   }
 }
