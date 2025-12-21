@@ -51,12 +51,62 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
   private async initStackBlitz() {
     const initialCode = this.value() || this.getDefaultCode();
 
-    // Create a minimal Angular project
+    // Create an Angular 19 project
     const project = {
       title: 'Angular Code Editor',
       description: 'Write your Angular code here',
-      template: 'angular-cli' as const,
+      template: 'node' as const,
       files: {
+        'package.json': JSON.stringify({
+          name: 'angular-code-editor',
+          version: '0.0.0',
+          scripts: {
+            ng: 'ng',
+            start: 'ng serve',
+            build: 'ng build',
+          },
+          dependencies: {
+            '@angular/animations': '^19.0.0',
+            '@angular/common': '^19.0.0',
+            '@angular/compiler': '^19.0.0',
+            '@angular/core': '^19.0.0',
+            '@angular/forms': '^19.0.0',
+            '@angular/platform-browser': '^19.0.0',
+            '@angular/platform-browser-dynamic': '^19.0.0',
+            '@angular/router': '^19.0.0',
+            rxjs: '~7.8.0',
+            tslib: '^2.3.0',
+            'zone.js': '~0.15.0',
+          },
+          devDependencies: {
+            '@angular-devkit/build-angular': '^19.0.0',
+            '@angular/cli': '^19.0.0',
+            '@angular/compiler-cli': '^19.0.0',
+            typescript: '~5.6.0',
+          },
+        }, null, 2),
+        'tsconfig.json': JSON.stringify({
+          compileOnSave: false,
+          compilerOptions: {
+            outDir: './dist/out-tsc',
+            strict: true,
+            noImplicitOverride: true,
+            noPropertyAccessFromIndexSignature: true,
+            noImplicitReturns: true,
+            noFallthroughCasesInSwitch: true,
+            skipLibCheck: true,
+            esModuleInterop: true,
+            sourceMap: true,
+            declaration: false,
+            experimentalDecorators: true,
+            moduleResolution: 'bundler',
+            importHelpers: true,
+            target: 'ES2022',
+            module: 'ES2022',
+            useDefineForClassFields: false,
+            lib: ['ES2022', 'dom'],
+          },
+        }, null, 2),
         'src/main.ts': `import { bootstrapApplication } from '@angular/platform-browser';
 import { Component } from '@angular/core';
 
@@ -75,6 +125,33 @@ bootstrapApplication(AppComponent);`,
     <app-root></app-root>
   </body>
 </html>`,
+        'angular.json': JSON.stringify({
+          version: 1,
+          projects: {
+            demo: {
+              projectType: 'application',
+              root: '',
+              sourceRoot: 'src',
+              architect: {
+                build: {
+                  builder: '@angular-devkit/build-angular:application',
+                  options: {
+                    outputPath: 'dist/demo',
+                    index: 'src/index.html',
+                    browser: 'src/main.ts',
+                    tsConfig: 'tsconfig.json',
+                  },
+                },
+                serve: {
+                  builder: '@angular-devkit/build-angular:dev-server',
+                  options: {
+                    buildTarget: 'demo:build',
+                  },
+                },
+              },
+            },
+          },
+        }, null, 2),
       },
       settings: {
         compile: {
