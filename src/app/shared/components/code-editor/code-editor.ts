@@ -130,20 +130,53 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
         export interface Type<T> extends Function { }
         export interface ModuleWithProviders<T> { }
 
-        export class Component {
-          constructor(obj: any);
-        }
-        export class NgModule { }
-        export class Injectable { }
-        export class Directive { }
-        export class Pipe { }
+        // Decorators (as functions)
+        export function Component(obj: {
+          selector?: string;
+          template?: string;
+          templateUrl?: string;
+          styles?: string[];
+          styleUrls?: string[];
+          changeDetection?: ChangeDetectionStrategy;
+          [key: string]: any;
+        }): ClassDecorator;
 
-        export class Input { }
-        export class Output { }
-        export class HostListener { }
-        export class ViewChild { }
-        export class ContentChild { }
-        export class HostBinding { }
+        export function NgModule(obj: any): ClassDecorator;
+        export function Injectable(obj?: any): ClassDecorator;
+        export function Directive(obj: any): ClassDecorator;
+        export function Pipe(obj: any): ClassDecorator;
+        export function Input(bindingPropertyName?: string): PropertyDecorator;
+        export function Output(bindingPropertyName?: string): PropertyDecorator;
+        export function HostListener(eventName: string, args?: string[]): MethodDecorator;
+        export function ViewChild(selector: any, opts?: any): PropertyDecorator;
+        export function ContentChild(selector: any, opts?: any): PropertyDecorator;
+        export function HostBinding(hostPropertyName?: string): PropertyDecorator;
+
+        // Lifecycle hook interfaces
+        export interface OnInit {
+          ngOnInit(): void;
+        }
+        export interface OnDestroy {
+          ngOnDestroy(): void;
+        }
+        export interface OnChanges {
+          ngOnChanges(changes: any): void;
+        }
+        export interface DoCheck {
+          ngDoCheck(): void;
+        }
+        export interface AfterContentInit {
+          ngAfterContentInit(): void;
+        }
+        export interface AfterContentChecked {
+          ngAfterContentChecked(): void;
+        }
+        export interface AfterViewInit {
+          ngAfterViewInit(): void;
+        }
+        export interface AfterViewChecked {
+          ngAfterViewChecked(): void;
+        }
 
         export class EventEmitter<T> {
           emit(value?: T): void;
@@ -176,20 +209,12 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
 
         export class Renderer2 { }
         export class ApplicationRef { }
-
-        export function OnInit(): void;
-        export function OnDestroy(): void;
-        export function OnChanges(): void;
-        export function DoCheck(): void;
-        export function AfterContentInit(): void;
-        export function AfterContentChecked(): void;
-        export function AfterViewInit(): void;
-        export function AfterViewChecked(): void;
       }
 
       declare module '@angular/common' {
         export class NgIf { }
         export class NgFor { }
+        export class NgForOf { }
         export class NgSwitch { }
         export class NgClass { }
         export class NgStyle { }
@@ -268,6 +293,7 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
         export class BehaviorSubject<T> extends Subject<T> {
           constructor(value: T);
           value: T;
+          getValue(): T;
         }
 
         export class ReplaySubject<T> extends Subject<T> {
@@ -276,6 +302,8 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
 
         export interface Subscription {
           unsubscribe(): void;
+          add(teardown: any): void;
+          remove(teardown: any): void;
         }
 
         export function of<T>(...values: T[]): Observable<T>;
@@ -285,29 +313,34 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
         export function combineLatest<T>(...observables: Observable<any>[]): Observable<T[]>;
         export function merge<T>(...observables: Observable<T>[]): Observable<T>;
         export function forkJoin<T>(sources: Observable<any>[]): Observable<T[]>;
+        export function throwError(error: any): Observable<never>;
       }
 
       declare module 'rxjs/operators' {
-        export function map<T, R>(project: (value: T) => R): any;
-        export function filter<T>(predicate: (value: T) => boolean): any;
-        export function tap<T>(next: (value: T) => void): any;
-        export function catchError<T>(selector: (err: any) => Observable<T>): any;
-        export function switchMap<T, R>(project: (value: T) => Observable<R>): any;
-        export function mergeMap<T, R>(project: (value: T) => Observable<R>): any;
-        export function concatMap<T, R>(project: (value: T) => Observable<R>): any;
-        export function debounceTime<T>(dueTime: number): any;
-        export function distinctUntilChanged<T>(): any;
-        export function takeUntil<T>(notifier: Observable<any>): any;
-        export function take<T>(count: number): any;
-        export function skip<T>(count: number): any;
-        export function first<T>(): any;
-        export function last<T>(): any;
-        export function shareReplay<T>(config?: any): any;
-        export function startWith<T>(value: T): any;
-        export function delay<T>(delay: number): any;
+        import { Observable } from 'rxjs';
+
+        export function map<T, R>(project: (value: T, index: number) => R): (source: Observable<T>) => Observable<R>;
+        export function filter<T>(predicate: (value: T, index: number) => boolean): (source: Observable<T>) => Observable<T>;
+        export function tap<T>(next: (value: T) => void): (source: Observable<T>) => Observable<T>;
+        export function catchError<T>(selector: (err: any, caught: Observable<T>) => Observable<any>): (source: Observable<T>) => Observable<T>;
+        export function switchMap<T, R>(project: (value: T, index: number) => Observable<R>): (source: Observable<T>) => Observable<R>;
+        export function mergeMap<T, R>(project: (value: T, index: number) => Observable<R>): (source: Observable<T>) => Observable<R>;
+        export function concatMap<T, R>(project: (value: T, index: number) => Observable<R>): (source: Observable<T>) => Observable<R>;
+        export function debounceTime<T>(dueTime: number): (source: Observable<T>) => Observable<T>;
+        export function distinctUntilChanged<T>(): (source: Observable<T>) => Observable<T>;
+        export function takeUntil<T>(notifier: Observable<any>): (source: Observable<T>) => Observable<T>;
+        export function take<T>(count: number): (source: Observable<T>) => Observable<T>;
+        export function skip<T>(count: number): (source: Observable<T>) => Observable<T>;
+        export function first<T>(): (source: Observable<T>) => Observable<T>;
+        export function last<T>(): (source: Observable<T>) => Observable<T>;
+        export function shareReplay<T>(config?: any): (source: Observable<T>) => Observable<T>;
+        export function startWith<T>(...values: T[]): (source: Observable<T>) => Observable<T>;
+        export function delay<T>(delay: number): (source: Observable<T>) => Observable<T>;
       }
 
       declare module '@angular/common/http' {
+        import { Observable } from 'rxjs';
+
         export class HttpClient {
           get<T>(url: string, options?: any): Observable<T>;
           post<T>(url: string, body: any, options?: any): Observable<T>;
@@ -335,36 +368,66 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
 
       // TypeScript global types
       interface Array<T> {
-        map<U>(callbackfn: (value: T, index: number, array: T[]) => U): U[];
-        filter(predicate: (value: T, index: number, array: T[]) => boolean): T[];
+        map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[];
+        filter(predicate: (value: T, index: number, array: T[]) => boolean, thisArg?: any): T[];
         reduce<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): U;
-        forEach(callbackfn: (value: T, index: number, array: T[]) => void): void;
-        find(predicate: (value: T, index: number, obj: T[]) => boolean): T | undefined;
-        some(predicate: (value: T, index: number, array: T[]) => boolean): boolean;
-        every(predicate: (value: T, index: number, array: T[]) => boolean): boolean;
+        forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void;
+        find(predicate: (value: T, index: number, obj: T[]) => boolean, thisArg?: any): T | undefined;
+        some(predicate: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean;
+        every(predicate: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean;
         push(...items: T[]): number;
         pop(): T | undefined;
         shift(): T | undefined;
         unshift(...items: T[]): number;
+        slice(start?: number, end?: number): T[];
+        splice(start: number, deleteCount?: number, ...items: T[]): T[];
         length: number;
       }
 
       interface Promise<T> {
-        then<TResult>(onfulfilled?: (value: T) => TResult | Promise<TResult>): Promise<TResult>;
-        catch<TResult>(onrejected: (reason: any) => TResult | Promise<TResult>): Promise<TResult>;
+        then<TResult1 = T, TResult2 = never>(
+          onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
+          onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
+        ): Promise<TResult1 | TResult2>;
+        catch<TResult = never>(
+          onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
+        ): Promise<T | TResult>;
       }
 
-      declare function setTimeout(handler: () => void, timeout: number): number;
-      declare function setInterval(handler: () => void, timeout: number): number;
+      declare function setTimeout(handler: () => void, timeout?: number): number;
+      declare function setInterval(handler: () => void, timeout?: number): number;
       declare function clearTimeout(handle: number): void;
       declare function clearInterval(handle: number): void;
 
-      declare const console: {
+      declare var console: {
         log(...data: any[]): void;
         error(...data: any[]): void;
         warn(...data: any[]): void;
         info(...data: any[]): void;
+        debug(...data: any[]): void;
       };
+
+      // Common TypeScript interfaces
+      interface ClassDecorator {
+        <TFunction extends Function>(target: TFunction): TFunction | void;
+      }
+
+      interface PropertyDecorator {
+        (target: Object, propertyKey: string | symbol): void;
+      }
+
+      interface MethodDecorator {
+        <T>(target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<T>): TypedPropertyDescriptor<T> | void;
+      }
+
+      interface TypedPropertyDescriptor<T> {
+        enumerable?: boolean;
+        configurable?: boolean;
+        writable?: boolean;
+        value?: T;
+        get?: () => T;
+        set?: (value: T) => void;
+      }
     `,
       'ts:filename/angular-rxjs.d.ts'
     );
