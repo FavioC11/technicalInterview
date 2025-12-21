@@ -330,7 +330,7 @@
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .report-container {
     padding: var(--spacing-lg);
 
@@ -365,7 +365,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 400px) {
   .report-container {
     padding: var(--spacing-md);
 
