@@ -11,9 +11,9 @@
 
   @if (question().requiresCodeEditor) {
   <app-code-editor
-    [value]="localAnswer()"
+    [value]="question().codeExample || ''"
     [language]="question().editorLanguage || 'typescript'"
-    [height]="'400px'"
+    [height]="'600px'"
     (valueChange)="onCodeEditorChange($event)"
   ></app-code-editor>
   } @else {
