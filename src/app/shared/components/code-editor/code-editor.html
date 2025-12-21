@@ -1,3 +1,10 @@
 <div class="code-editor-wrapper" [style.height]="height()">
-  <div #editorContainer class="stackblitz-container"></div>
+  @if (isLoading()) {
+  <div class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p>Cargando editor de código...</p>
+    <p class="loading-hint">Esto puede tardar unos segundos la primera vez</p>
+  </div>
+  }
+  <div #editorContainer class="stackblitz-container" [class.hidden]="isLoading()"></div>
 </div>
