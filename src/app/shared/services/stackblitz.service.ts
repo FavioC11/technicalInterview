@@ -5,36 +5,10 @@ import sdk from '@stackblitz/sdk';
   providedIn: 'root',
 })
 export class StackBlitzService {
-  private vm: any = null;
-  private loading = false;
-  private loaded = false;
-
-  async getOrCreateProject(container: HTMLElement, initialCode: string, height: number) {
-    // If already created, just update the code
-    if (this.vm && this.loaded) {
-      await this.updateCode(initialCode);
-      return this.vm;
-    }
-
-    // If currently loading, wait
-    if (this.loading) {
-      await this.waitForLoad();
-      return this.vm;
-    }
-
-    // Create new project
-    this.loading = true;
-    this.vm = await this.createProject(container, initialCode, height);
-    this.loading = false;
-    this.loaded = true;
-
-    return this.vm;
-  }
-
-  private async createProject(container: HTMLElement, initialCode: string, height: number) {
+  async createProject(container: HTMLElement, initialCode: string, height: number) {
     const codeWithImports = this.addRequiredImports(initialCode);
 
-    // Use angular-cli template (much faster - Angular already installed)
+    // Use angular-cli template (fast - Angular pre-installed)
     const project = {
       title: 'Angular Code Editor',
       description: 'Write your Angular code here',
@@ -62,23 +36,6 @@ export class StackBlitzService {
 
     await vm.editor.openFile('src/main.ts');
     return vm;
-  }
-
-  private async updateCode(newCode: string) {
-    if (!this.vm) return;
-
-    try {
-      const codeWithImports = this.addRequiredImports(newCode);
-      await this.vm.applyFsDiff({
-        create: {},
-        destroy: [],
-        patch: {
-          'src/main.ts': codeWithImports,
-        },
-      });
-    } catch (error) {
-      console.error('Error updating code:', error);
-    }
   }
 
   private addRequiredImports(code: string): string {
@@ -143,24 +100,5 @@ export class StackBlitzService {
       // Wrap code in a basic component
       return `${importsString}\n\n@Component({\n  selector: 'app-root',\n  standalone: true,\n  template: \`<h1>Write your code below</h1>\`\n})\nexport class AppComponent {}\n\n${code}\n\nbootstrapApplication(AppComponent);`;
     }
-  }
-
-  private async waitForLoad(): Promise<void> {
-    return new Promise((resolve) => {
-      const checkLoaded = setInterval(() => {
-        if (!this.loading && this.loaded) {
-          clearInterval(checkLoaded);
-          resolve();
-        }
-      }, 100);
-    });
-  }
-
-  isLoading(): boolean {
-    return this.loading;
-  }
-
-  isLoaded(): boolean {
-    return this.loaded;
   }
 }

@@ -12,9 +12,7 @@
   @if (question().requiresCodeEditor) {
   <app-code-editor
     [value]="question().codeExample || ''"
-    [language]="question().editorLanguage || 'typescript'"
     [height]="'600px'"
-    (valueChange)="onCodeEditorChange($event)"
   ></app-code-editor>
   } @else {
   <textarea
