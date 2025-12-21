@@ -16,6 +16,8 @@ export interface Question {
   title: string;
   description: string;
   codeExample?: string;
+  requiresCodeEditor?: boolean;
+  editorLanguage?: string;
   points: number;
   criteria: EvaluationCriteria[];
   sectionId: string;

@@ -2,10 +2,11 @@ import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Question as QuestionModel } from '../../../../core/models/question.model';
+import { CodeEditor } from '../../../../shared/components/code-editor/code-editor';
 
 @Component({
   selector: 'app-question',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CodeEditor],
   templateUrl: './question.html',
   styleUrl: './question.scss',
 })
@@ -33,6 +34,14 @@ export class Question {
     this.answerChange.emit({
       questionId: this.question().id,
       answer: target.value,
+    });
+  }
+
+  onCodeEditorChange(code: string) {
+    this.localAnswer.set(code);
+    this.answerChange.emit({
+      questionId: this.question().id,
+      answer: code,
     });
   }
 

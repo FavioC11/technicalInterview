@@ -9,6 +9,14 @@
   <pre class="code-block"><code>{{ question().codeExample }}</code></pre>
   }
 
+  @if (question().requiresCodeEditor) {
+  <app-code-editor
+    [value]="localAnswer()"
+    [language]="question().editorLanguage || 'typescript'"
+    [height]="'400px'"
+    (valueChange)="onCodeEditorChange($event)"
+  ></app-code-editor>
+  } @else {
   <textarea
     class="answer-input"
     [value]="localAnswer()"
@@ -16,6 +24,7 @@
     placeholder="Escribe tu respuesta aquí..."
     [rows]="question().codeExample ? 10 : 5"
   ></textarea>
+  }
 
   <button class="toggle-answer-btn" (click)="toggleCriteria()">
     👁️ {{ showCriteria() ? 'Ocultar' : 'Ver' }} Criterios de Evaluación

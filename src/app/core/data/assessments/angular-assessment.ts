@@ -192,6 +192,8 @@ export class ListComponent {
     this.items.push({ name: 'Item ' + (this.items.length + 1) });
   }
 }`,
+          requiresCodeEditor: true,
+          editorLanguage: 'typescript',
           points: 6,
           sectionId: 'nivel3',
           criteria: [
@@ -212,6 +214,8 @@ export class ListComponent {
   });
   interval(1000).subscribe(() => console.log('Tick'));
 }`,
+          requiresCodeEditor: true,
+          editorLanguage: 'typescript',
           points: 6,
           sectionId: 'nivel3',
           criteria: [

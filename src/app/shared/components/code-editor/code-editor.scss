@@ -1,0 +1,42 @@
+/* ============================================
+   CODE EDITOR COMPONENT
+   Design: Professional, clean, integrated
+   ============================================ */
+.code-editor-wrapper {
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+
+  // Clean border to match design system
+  border: 2px solid #e5e7eb;
+
+  // Soft shadow for elevation
+  box-shadow: var(--shadow-md);
+
+  // Smooth transitions
+  transition: all var(--transition-base);
+
+  &:hover {
+    border-color: var(--color-accent-primary);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &:focus-within {
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 0 3px rgba(79, 107, 237, 0.1);
+  }
+
+  .monaco-editor-container {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 480px) {
+  .code-editor-wrapper {
+    border-radius: var(--radius-sm);
+  }
+}
