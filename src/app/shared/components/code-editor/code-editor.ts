@@ -68,18 +68,41 @@ export class CodeEditor implements AfterViewInit, OnDestroy {
       return;
     }
 
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = 'assets/monaco-editor/min/vs/loader.js';
-      script.onload = () => {
-        (window as any).require.config({
-          paths: { vs: 'assets/monaco-editor/min/vs' },
-        });
-        (window as any).require(['vs/editor/editor.main'], () => {
-          this.monacoLoaded = true;
-          resolve();
-        });
+
+      // Try local assets first, fallback to CDN
+      const tryLoadFromSource = (src: string, paths: string, isCDN: boolean = false) => {
+        script.src = src;
+        script.onload = () => {
+          (window as any).require.config({
+            paths: { vs: paths },
+          });
+          (window as any).require(['vs/editor/editor.main'], () => {
+            this.monacoLoaded = true;
+            resolve();
+          });
+        };
+        script.onerror = () => {
+          if (!isCDN) {
+            // If local fails, try CDN
+            console.log('Monaco local assets not found, loading from CDN...');
+            document.body.removeChild(script);
+            const cdnScript = document.createElement('script');
+            tryLoadFromSource.call(
+              this,
+              'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.55.1/min/vs/loader.min.js',
+              'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.55.1/min/vs',
+              true
+            );
+            document.body.appendChild(cdnScript);
+          } else {
+            reject(new Error('Failed to load Monaco Editor'));
+          }
+        };
       };
+
+      tryLoadFromSource('assets/monaco-editor/min/vs/loader.js', 'assets/monaco-editor/min/vs');
       document.body.appendChild(script);
     });
   }
