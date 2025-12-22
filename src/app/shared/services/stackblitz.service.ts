@@ -6,15 +6,19 @@ import sdk from '@stackblitz/sdk';
 })
 export class StackBlitzService {
   async createProject(container: HTMLElement, initialCode: string, height: number) {
-    const codeWithImports = this.addRequiredImports(initialCode);
+    const componentCode = this.buildComponentCode(initialCode);
 
-    // Use angular-cli template (fast - Angular pre-installed)
+    // Clean Angular 21 starter template
     const project = {
       title: 'Angular Code Editor',
       description: 'Write your Angular code here',
-      template: 'angular-cli' as const,
+      template: 'node' as const,
       files: {
-        'src/main.ts': codeWithImports,
+        'package.json': this.getPackageJson(),
+        'tsconfig.json': this.getTsConfig(),
+        'index.html': this.getIndexHtml(),
+        'src/main.ts': this.getMainTs(componentCode),
+        'src/app/app.component.ts': componentCode,
       },
       settings: {
         compile: {
@@ -27,24 +31,138 @@ export class StackBlitzService {
 
     const vm = await sdk.embedProject(container, project, {
       height: height || 600,
-      openFile: 'src/main.ts',
+      openFile: 'src/app/app.component.ts',
       view: 'editor',
       hideNavigation: true,
       hideDevTools: false,
       forceEmbedLayout: true,
     });
 
-    await vm.editor.openFile('src/main.ts');
+    await vm.editor.openFile('src/app/app.component.ts');
     return vm;
   }
 
-  private addRequiredImports(code: string): string {
+  private getPackageJson(): string {
+    return JSON.stringify({
+      name: 'angular-starter',
+      version: '0.0.0',
+      private: true,
+      type: 'module',
+      dependencies: {
+        '@angular/animations': '^21.0.0',
+        '@angular/common': '^21.0.0',
+        '@angular/compiler': '^21.0.0',
+        '@angular/core': '^21.0.0',
+        '@angular/forms': '^21.0.0',
+        '@angular/platform-browser': '^21.0.0',
+        '@angular/platform-browser-dynamic': '^21.0.0',
+        '@angular/router': '^21.0.0',
+        'rxjs': '~7.8.0',
+        'tslib': '^2.3.0',
+        'zone.js': '~0.15.0'
+      },
+      devDependencies: {
+        '@angular-devkit/build-angular': '^21.0.0',
+        '@angular/cli': '^21.0.0',
+        '@angular/compiler-cli': '^21.0.0',
+        'typescript': '~5.6.0'
+      }
+    }, null, 2);
+  }
+
+  private getTsConfig(): string {
+    return JSON.stringify({
+      compileOnSave: false,
+      compilerOptions: {
+        outDir: './dist/out-tsc',
+        forceConsistentCasingInFileNames: true,
+        strict: true,
+        noImplicitOverride: true,
+        noPropertyAccessFromIndexSignature: true,
+        noImplicitReturns: true,
+        noFallthroughCasesInSwitch: true,
+        skipLibCheck: true,
+        esModuleInterop: true,
+        sourceMap: true,
+        declaration: false,
+        experimentalDecorators: true,
+        moduleResolution: 'bundler',
+        importHelpers: true,
+        target: 'ES2022',
+        module: 'ES2022',
+        useDefineForClassFields: false,
+        lib: ['ES2022', 'dom']
+      },
+      angularCompilerOptions: {
+        enableI18nLegacyMessageIdFormat: false,
+        strictInjectionParameters: true,
+        strictInputAccessModifiers: true,
+        strictTemplates: true
+      }
+    }, null, 2);
+  }
+
+  private getIndexHtml(): string {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Angular Code Editor</title>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>`;
+  }
+
+  private getMainTs(componentCode: string): string {
+    return `import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+
+bootstrapApplication(AppComponent)
+  .catch((err) => console.error(err));`;
+  }
+
+  private buildComponentCode(initialCode: string): string {
+    const imports = this.detectImports(initialCode);
+
+    // Check if code already has a complete component
+    if (initialCode.includes('@Component') && initialCode.includes('export class')) {
+      return `${imports}\n\n${initialCode}`;
+    }
+
+    // Otherwise, create a basic component structure
+    return `${imports}
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  template: \`
+    <div>
+      <h1>Your Angular Component</h1>
+      <!-- Add your template here -->
+    </div>
+  \`,
+  styles: [\`
+    :host {
+      display: block;
+      padding: 1rem;
+    }
+  \`]
+})
+export class AppComponent {
+  ${initialCode}
+}`;
+  }
+
+  private detectImports(code: string): string {
     const imports = new Set<string>();
 
-    // Detect what needs to be imported
-    if (code.includes('@Component') || code.includes('Component(')) {
-      imports.add("import { Component } from '@angular/core';");
-    }
+    // Always add Component
+    imports.add("import { Component } from '@angular/core';");
+
+    // Detect other Angular imports
     if (code.includes('ChangeDetectionStrategy')) {
       imports.add("import { ChangeDetectionStrategy } from '@angular/core';");
     }
@@ -54,51 +172,39 @@ export class StackBlitzService {
     if (code.includes('OnDestroy') || code.includes('ngOnDestroy')) {
       imports.add("import { OnDestroy } from '@angular/core';");
     }
-    if (code.includes('ChangeDetectorRef')) {
-      imports.add("import { ChangeDetectorRef } from '@angular/core';");
+    if (code.includes('signal') || code.includes('computed')) {
+      imports.add("import { signal, computed } from '@angular/core';");
     }
-    if (code.includes('interval') || code.includes('timer')) {
-      imports.add("import { interval } from 'rxjs';");
+    if (code.includes('input(') || code.includes('output(')) {
+      imports.add("import { input, output } from '@angular/core';");
     }
-    if (code.includes('BehaviorSubject')) {
-      imports.add("import { BehaviorSubject } from 'rxjs';");
+
+    // RxJS imports
+    if (code.includes('interval') || code.includes('timer') || code.includes('of')) {
+      imports.add("import { interval, timer, of } from 'rxjs';");
     }
-    if (code.includes('Subject')) {
-      imports.add("import { Subject } from 'rxjs';");
+    if (code.includes('BehaviorSubject') || code.includes('Subject') || code.includes('ReplaySubject')) {
+      imports.add("import { BehaviorSubject, Subject, ReplaySubject } from 'rxjs';");
     }
-    if (
-      code.includes('pipe(') ||
-      code.includes('map') ||
-      code.includes('filter') ||
-      code.includes('takeUntil')
-    ) {
-      imports.add(
-        "import { map, filter, tap, takeUntil, switchMap, debounceTime } from 'rxjs/operators';"
-      );
+    if (code.includes('map') || code.includes('filter') || code.includes('tap') || code.includes('takeUntil')) {
+      imports.add("import { map, filter, tap, takeUntil, switchMap, debounceTime } from 'rxjs/operators';");
     }
-    if (code.includes('HttpClient')) {
-      imports.add("import { HttpClient } from '@angular/common/http';");
-    }
+
+    // Forms
     if (code.includes('FormControl') || code.includes('FormGroup')) {
       imports.add("import { FormControl, FormGroup, Validators } from '@angular/forms';");
     }
-    if (code.includes('Router')) {
-      imports.add("import { Router } from '@angular/router';");
+
+    // HTTP
+    if (code.includes('HttpClient')) {
+      imports.add("import { HttpClient } from '@angular/common/http';");
     }
 
-    // Always add bootstrapApplication
-    imports.add("import { bootstrapApplication } from '@angular/platform-browser';");
-
-    const importsString = Array.from(imports).join('\n');
-
-    // Check if code already has a component definition
-    const hasComponent = code.includes('@Component') || code.includes('export class');
-
-    if (hasComponent) {
-      return `${importsString}\n\n${code}\n\nbootstrapApplication(AppComponent || ListComponent || YourComponent);`;
-    } else {
-      // Wrap code in a basic component
-      return `${importsString}\n\n@Component({\n  selector: 'app-root',\n  standalone: true,\n  template: \`<h1>Write your code below</h1>\`\n})\nexport class AppComponent {}\n\n${code}\n\nbootstrapApplication(AppComponent);`;
+    // Router
+    if (code.includes('Router') || code.includes('ActivatedRoute')) {
+      imports.add("import { Router, ActivatedRoute } from '@angular/router';");
     }
+
+    return Array.from(imports).join('\n');
   }
 }
