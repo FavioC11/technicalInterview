@@ -8,17 +8,16 @@ export class StackBlitzService {
   async createProject(container: HTMLElement, initialCode: string, height: number) {
     const componentCode = this.buildComponentCode(initialCode);
 
-    // Clean Angular 21 starter template
+    // Use angular-cli template (fast - Angular pre-installed) with clean file structure
     const project = {
       title: 'Angular Code Editor',
       description: 'Write your Angular code here',
-      template: 'node' as const,
+      template: 'angular-cli' as const,
       files: {
-        'package.json': this.getPackageJson(),
-        'tsconfig.json': this.getTsConfig(),
-        'index.html': this.getIndexHtml(),
-        'src/main.ts': this.getMainTs(componentCode),
+        'src/main.ts': this.getMainTs(),
         'src/app/app.component.ts': componentCode,
+        'src/app/app.component.html': this.getDefaultTemplate(),
+        'src/index.html': this.getIndexHtml(),
       },
       settings: {
         compile: {
@@ -42,66 +41,6 @@ export class StackBlitzService {
     return vm;
   }
 
-  private getPackageJson(): string {
-    return JSON.stringify({
-      name: 'angular-starter',
-      version: '0.0.0',
-      private: true,
-      type: 'module',
-      dependencies: {
-        '@angular/animations': '^21.0.0',
-        '@angular/common': '^21.0.0',
-        '@angular/compiler': '^21.0.0',
-        '@angular/core': '^21.0.0',
-        '@angular/forms': '^21.0.0',
-        '@angular/platform-browser': '^21.0.0',
-        '@angular/platform-browser-dynamic': '^21.0.0',
-        '@angular/router': '^21.0.0',
-        'rxjs': '~7.8.0',
-        'tslib': '^2.3.0',
-        'zone.js': '~0.15.0'
-      },
-      devDependencies: {
-        '@angular-devkit/build-angular': '^21.0.0',
-        '@angular/cli': '^21.0.0',
-        '@angular/compiler-cli': '^21.0.0',
-        'typescript': '~5.6.0'
-      }
-    }, null, 2);
-  }
-
-  private getTsConfig(): string {
-    return JSON.stringify({
-      compileOnSave: false,
-      compilerOptions: {
-        outDir: './dist/out-tsc',
-        forceConsistentCasingInFileNames: true,
-        strict: true,
-        noImplicitOverride: true,
-        noPropertyAccessFromIndexSignature: true,
-        noImplicitReturns: true,
-        noFallthroughCasesInSwitch: true,
-        skipLibCheck: true,
-        esModuleInterop: true,
-        sourceMap: true,
-        declaration: false,
-        experimentalDecorators: true,
-        moduleResolution: 'bundler',
-        importHelpers: true,
-        target: 'ES2022',
-        module: 'ES2022',
-        useDefineForClassFields: false,
-        lib: ['ES2022', 'dom']
-      },
-      angularCompilerOptions: {
-        enableI18nLegacyMessageIdFormat: false,
-        strictInjectionParameters: true,
-        strictInputAccessModifiers: true,
-        strictTemplates: true
-      }
-    }, null, 2);
-  }
-
   private getIndexHtml(): string {
     return `<!DOCTYPE html>
 <html lang="en">
@@ -116,12 +55,18 @@ export class StackBlitzService {
 </html>`;
   }
 
-  private getMainTs(componentCode: string): string {
+  private getMainTs(): string {
     return `import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 
-bootstrapApplication(AppComponent)
-  .catch((err) => console.error(err));`;
+bootstrapApplication(AppComponent).catch((err) => console.error(err));`;
+  }
+
+  private getDefaultTemplate(): string {
+    return `<div class="container">
+  <h1>Angular Component</h1>
+  <p>Edit app.component.ts to start coding</p>
+</div>`;
   }
 
   private buildComponentCode(initialCode: string): string {
@@ -132,24 +77,14 @@ bootstrapApplication(AppComponent)
       return `${imports}\n\n${initialCode}`;
     }
 
-    // Otherwise, create a basic component structure
+    // Create a clean standalone component structure
     return `${imports}
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  template: \`
-    <div>
-      <h1>Your Angular Component</h1>
-      <!-- Add your template here -->
-    </div>
-  \`,
-  styles: [\`
-    :host {
-      display: block;
-      padding: 1rem;
-    }
-  \`]
+  templateUrl: './app.component.html',
+  styles: []
 })
 export class AppComponent {
   ${initialCode}
